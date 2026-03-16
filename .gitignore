@@ -8,3 +8,4 @@ laion400m/
 __pycache__/
 *.pyc
 venv/
+outputs/*/concept_deliberation
