@@ -166,12 +166,17 @@ def with_loading(
       button.description = 'Loading...'
       button.disabled = True
 
-      # Call the original function.
-      func(*args, **kwargs)
-
-      # Restore original button label and re-enable it.
-      button.description = original_label
-      button.disabled = False
+      try:
+        # Call the original function.
+        func(*args, **kwargs)
+      except Exception:
+        logging.getLogger(__name__).warning(
+            'Error in button callback.', exc_info=True
+        )
+      finally:
+        # Always restore button state, even if an exception occurred.
+        button.description = original_label
+        button.disabled = False
     return wrapper
   return decorator
 

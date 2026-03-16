@@ -151,7 +151,7 @@ class RetrievalClient:
       with urllib.request.urlopen(req, timeout=10, context=ctx) as r:
         return r.read()
     except Exception as e:
-      logger.debug('Failed to download image from %s: %s', url, e)
+      logger.log(logging.DEBUG - 1, 'Failed to download image from %s: %s', url, e)
       return None
 
   def rank_images_by_criteria(
@@ -253,7 +253,10 @@ class RetrievalClient:
         image_bytes = downloaded[i]
       if image_bytes is None:
         continue
-      img = image_py.MyImage(image_bytes=image_bytes)
+      try:
+        img = image_py.MyImage(image_bytes=image_bytes)
+      except Exception:
+        continue
       img.distance = res['similarity']
       img.image_features = np.array(res['embedding'])
       if 'url' in res:
